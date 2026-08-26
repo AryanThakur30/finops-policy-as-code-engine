@@ -30,6 +30,7 @@ jobs:
         run: |
           infracost breakdown \
             --path=terraform \
+            --terraform-var=ami_id=ami-0a1c1331a9f44a10 \
             --format=json \
             --out-file=/tmp/infracost.json
 
