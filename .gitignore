@@ -1,11 +1,17 @@
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
-*.tfvars
-*.tfvars.json
+*.tfplan
+tfplan
+
+# Infracost generated files
+.infracost/
+infracost.json
+
+# OPA binary
+opa.exe
+
+# Local environment/secrets
 .env
-__pycache__/
-*.pyc
-.idea/
-.vscode/
+*.secret
