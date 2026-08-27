@@ -1,5 +1,7 @@
 package infracost
 
+import rego.v1
+
 deny contains out if {
     maxCost := 100.0
     actualCost := to_number(input.totalMonthlyCost)
