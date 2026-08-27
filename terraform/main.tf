@@ -51,5 +51,6 @@ resource "aws_instance" "cost_killing_test" {
     Project     = "finops-policy-engine"
     CostCenter  = "CC-1001"
     ManagedBy   = "terraform"
+    FinOpsPolicy = "enforced"
   }
 }
