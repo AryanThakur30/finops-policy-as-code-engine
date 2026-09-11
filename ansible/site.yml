@@ -1,6 +1,6 @@
 ---
-- name: Configure web server
+- name: Deploy FinOps Cost Dashboard
   hosts: web
-
+  gather_facts: true
   roles:
     - webserver

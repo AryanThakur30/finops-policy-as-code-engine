@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ finops_dashboard_title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .environment {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #e0e7ff;
+            color: #3730a3;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .label {
+            font-size: 13px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .value {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status strong {
+            color: #047857;
+        }
+
+        footer {
+            margin-top: 35px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>💰 {{ finops_dashboard_title }}</h1>
+        <p>Infrastructure cost visibility and policy status.</p>
+        <span class="environment">
+            Environment: {{ deployment_environment }}
+        </span>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="label">Current Monthly Cost</div>
+            <div class="value">${{ "%.2f"|format(finops_current_monthly_cost|float) }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Previous Monthly Cost</div>
+            <div class="value">${{ "%.2f"|format(finops_previous_monthly_cost|float) }}</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Cost Increase</div>
+            <div class="value">{{ "%.2f"|format(finops_cost_increase_percentage|float) }}%</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Resources Analyzed</div>
+            <div class="value">{{ finops_resource_count }}</div>
+        </div>
+
+    </div>
+
+    <div class="status">
+        <strong>Policy Status: {{ finops_policy_status }}</strong>
+        <p>{{ finops_policy_message }}</p>
+    </div>
+
+    <footer>
+        Generated and deployed through the FinOps Policy as Code automation pipeline.
+    </footer>
+
+</div>
+</body>
+</html>

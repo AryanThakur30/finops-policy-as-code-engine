@@ -126,6 +126,97 @@ jobs:
           cat /tmp/finops-cost-report.md
 
       # ------------------------------------------------------
+      # Prepare Ansible dashboard data
+      # ------------------------------------------------------
+
+      - name: Prepare FinOps dashboard variables
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(
+              Path("/tmp/infracost-enriched.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          summary = data.get("summary", data)
+
+          variables = {
+              "deployment_environment": data.get(
+                  "environment",
+                  "development"
+              ),
+              "finops_current_monthly_cost": summary.get(
+                  "current_monthly_cost",
+                  0.0
+              ),
+              "finops_previous_monthly_cost": summary.get(
+                  "previous_monthly_cost",
+                  0.0
+              ),
+              "finops_cost_increase_percentage": summary.get(
+                  "increase_percentage",
+                  0.0
+              ),
+              "finops_resource_count": summary.get(
+                  "resource_count",
+                  0
+              ),
+              "finops_policy_status": "REVIEW",
+              "finops_policy_message": (
+                  "Infrastructure cost analyzed by Infracost "
+                  "and processed by the FinOps analytics engine."
+              ),
+              "finops_render_only": True,
+              "finops_dashboard_path": (
+                  "/tmp/finops-dashboard/index.html"
+              ),
+          }
+
+          output = Path("${{ runner.temp }}/finops-dashboard-vars.json")
+          output.write_text(
+              json.dumps(variables, indent=2),
+              encoding="utf-8",
+          )
+
+          print(json.dumps(variables, indent=2))
+          PY
+
+      # ------------------------------------------------------
+      # Ansible FinOps dashboard rendering
+      # ------------------------------------------------------
+
+      - name: Render FinOps dashboard with Ansible
+        run: |
+          mkdir -p /tmp/finops-dashboard
+
+          ansible-playbook \
+            -i ansible/inventory.ini \
+            ansible/site.yml \
+            --extra-vars "@${{ runner.temp }}/finops-dashboard-vars.json"
+
+      # ------------------------------------------------------
+      # Verify dashboard
+      # ------------------------------------------------------
+
+      - name: Verify FinOps dashboard
+        run: |
+          test -s /tmp/finops-dashboard/index.html
+
+          grep -q "FinOps Cost Governance Dashboard" \
+            /tmp/finops-dashboard/index.html
+
+          grep -q "$FINOPS_ENVIRONMENT" \
+            /tmp/finops-dashboard/index.html
+
+          echo "FinOps dashboard rendered successfully."
+          echo "Dashboard:"
+          ls -lh /tmp/finops-dashboard/index.html
+
+      # ------------------------------------------------------
+      # ------------------------------------------------------
       # FinOps enforcement
       # ------------------------------------------------------
 

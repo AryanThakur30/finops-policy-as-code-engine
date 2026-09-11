@@ -1,8 +1,8 @@
 FROM openpolicyagent/opa:latest
 
-WORKDIR /project
+WORKDIR /project/policies
 
-COPY policies/generated/cost.rego /project/policies/cost.rego
-COPY policies/cost_test.rego /project/policies/cost_test.rego
+COPY policies/generated/cost.rego ./cost.rego
+COPY policies/cost_test.rego ./cost_test.rego
 
-CMD ["test", "/project/policies", "-v"]
+CMD ["test", ".", "-v"]

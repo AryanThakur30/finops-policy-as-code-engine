@@ -1,0 +1,13 @@
+server {
+    listen {{ finops_dashboard_port }};
+    listen [::]:{{ finops_dashboard_port }};
+
+    server_name _;
+
+    root /var/www/html;
+    index finops-dashboard.html;
+
+    location / {
+        try_files $uri $uri/ /finops-dashboard.html;
+    }
+}

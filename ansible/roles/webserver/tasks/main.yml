@@ -1,13 +1,34 @@
+---
 - name: Install Nginx
   ansible.builtin.package:
     name: "{{ nginx_package }}"
     state: present
 
-- name: Deploy Nginx configuration
+- name: Deploy FinOps dashboard
   ansible.builtin.template:
-    src: nginx.conf.j2
-    dest: /etc/nginx/sites-available/default
+    src: dashboard.html.j2
+    dest: /var/www/html/finops-dashboard.html
     mode: "0644"
+  notify: Restart Nginx
+
+- name: Deploy FinOps dashboard Nginx configuration
+  ansible.builtin.template:
+    src: finops-dashboard.conf.j2
+    dest: /etc/nginx/sites-available/finops-dashboard
+    mode: "0644"
+  notify: Restart Nginx
+
+- name: Enable FinOps dashboard site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/finops-dashboard
+    dest: /etc/nginx/sites-enabled/finops-dashboard
+    state: link
+  notify: Restart Nginx
+
+- name: Disable default Nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
   notify: Restart Nginx
 
 - name: Ensure Nginx is enabled and running

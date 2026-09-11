@@ -1,4 +1,17 @@
+---
 nginx_package: nginx
 nginx_service: nginx
-nginx_port: 80
+
 deployment_environment: development
+
+finops_dashboard_title: "FinOps Cost Governance Dashboard"
+
+finops_current_monthly_cost: 0.00
+finops_previous_monthly_cost: 0.00
+finops_cost_increase_percentage: 0.00
+finops_resource_count: 0
+
+finops_policy_status: "PASS"
+finops_policy_message: "Infrastructure is within configured FinOps policies."
+
+finops_dashboard_port: 80
