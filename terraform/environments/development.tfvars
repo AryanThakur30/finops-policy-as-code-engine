@@ -1,0 +1,10 @@
+environment       = "development"
+owner             = "finops-team"
+aws_region        = "us-east-1"
+instance_type     = "m5.2xlarge"
+root_volume_size  = 30
+data_volume_size  = 50
+vpc_cidr          = "10.20.0.0/16"
+subnet_cidr       = "10.20.1.0/24"
+availability_zone = "us-east-1a"
+http_port         = 80
