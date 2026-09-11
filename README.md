@@ -1,144 +1,146 @@
-<div align="center">
 
 # 💰 FinOps Policy as Code Engine
 
-### 🚦 Automated Cloud Cost Governance Before Deployment
-
-<p>
-  <strong>Terraform</strong> •
-  <strong>Infracost</strong> •
-  <strong>Open Policy Agent</strong> •
-  <strong>Python</strong> •
-  <strong>Ansible</strong> •
-  <strong>Docker</strong> •
-  <strong>GitHub Actions</strong>
+<p align="center">
+  <img src="https://img.shields.io/badge/FinOps-Policy%20as%20Code-00A67E?style=for-the-badge" alt="FinOps">
+  <img src="https://img.shields.io/badge/Open%20Policy%20Agent-OPA-7B61FF?style=for-the-badge" alt="OPA">
+  <img src="https://img.shields.io/badge/Terraform-IaC-844FBA?style=for-the-badge" alt="Terraform">
+  <img src="https://img.shields.io/badge/Ansible-Automation-EE0000?style=for-the-badge" alt="Ansible">
+  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge" alt="Python">
+  <img src="https://img.shields.io/badge/Jinja2-Templates-B41717?style=for-the-badge" alt="Jinja2">
+  <img src="https://img.shields.io/badge/Docker-Reproducible-2496ED?style=for-the-badge" alt="Docker">
 </p>
 
-<br>
+<p align="center">
+  <strong>Automated cloud cost governance using Infrastructure as Code, Policy as Code, cost analytics, and CI/CD enforcement.</strong>
+</p>
 
-<img src="https://img.shields.io/badge/FinOps-Policy%20as%20Code-00C853?style=for-the-badge&logo=googlecloud&logoColor=white">
-<img src="https://img.shields.io/badge/Terraform-Infrastructure-7B42BC?style=for-the-badge&logo=terraform&logoColor=white">
-<img src="https://img.shields.io/badge/OPA-Rego-EF7B4D?style=for-the-badge&logo=openpolicyagent&logoColor=white">
-<img src="https://img.shields.io/badge/Python-Automation-3776AB?style=for-the-badge&logo=python&logoColor=white">
-
-<br>
-
-<img src="https://img.shields.io/badge/Docker-Reproducible-2496ED?style=for-the-badge&logo=docker&logoColor=white">
-<img src="https://img.shields.io/badge/Ansible-Configuration-EE0000?style=for-the-badge&logo=ansible&logoColor=white">
-<img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white">
-<img src="https://img.shields.io/badge/LocalStack-Local%20AWS-6B4FBB?style=for-the-badge&logo=amazonaws&logoColor=white">
-
-<br><br>
-
-<img src="https://img.shields.io/badge/Policy%20Tests-10%2F10%20Passing-00C853?style=flat-square">
-<img src="https://img.shields.io/badge/Python%20Tests-2%2F2%20Passing-00C853?style=flat-square">
-<img src="https://img.shields.io/badge/Terraform-Validated-00C853?style=flat-square">
-<img src="https://img.shields.io/badge/CI-Passing-00C853?style=flat-square">
-
-</div>
+<p align="center">
+  <img src="https://img.shields.io/badge/OPA%20Tests-10%2F10-success?style=flat-square" alt="OPA Tests">
+  <img src="https://img.shields.io/badge/Python%20Tests-10%2F10-success?style=flat-square" alt="Python Tests">
+  <img src="https://img.shields.io/badge/Terraform-Validated-success?style=flat-square" alt="Terraform">
+  <img src="https://img.shields.io/badge/Ansible-Syntax%20Validated-success?style=flat-square" alt="Ansible">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License">
+</p>
 
 ---
 
-## 🎯 What Is This?
+## 🚀 Overview
 
-**FinOps Policy as Code Engine** is an automated cloud cost-governance system that evaluates the financial impact of Terraform infrastructure **before it gets deployed**.
+**FinOps Policy as Code Engine** brings cloud cost governance directly into the infrastructure delivery lifecycle.
 
-Instead of discovering excessive infrastructure costs after deployment, this project turns FinOps rules into executable policies and makes **cloud cost a CI/CD quality gate**.
+Instead of discovering excessive cloud spending after deployment, infrastructure changes are evaluated during the pull request process.
+
+The system combines:
+
+- 💰 Infracost for infrastructure cost estimation
+- 📜 Open Policy Agent for policy enforcement
+- 🐍 Python for policy generation and cost analytics
+- 🧩 Jinja2 for maintainable Rego templates
+- 🏗️ Terraform for infrastructure as code
+- 🔧 Ansible for FinOps dashboard deployment
+- 🐳 Docker for reproducible OPA execution
+- 🔄 GitHub Actions for CI/CD enforcement
+- 💬 GitHub PR reporting
+- 🚨 Slack notifications for policy violations
+
+The core idea is simple:
+
+> **Make cloud cost a deployment constraint before it becomes a cloud bill.**
+
+---
+
+# 🧠 Architecture
 
 ```text
-        Terraform Infrastructure
-                  │
-                  ▼
-           💵 Infracost
-                  │
-                  ▼
-          📊 Cost Analysis
-                  │
-                  ▼
-          🧠 Open Policy Agent
-                  │
-          ┌───────┴────────┐
-          ▼                ▼
-       ✅ PASS           ❌ FAIL
-          │                │
-          ▼                ├── 💬 PR Report
-      Merge Allowed        ├── 🔔 Slack Alert
-                           └── 🚫 CI Failed
-🚀 Why This Project?
-
-Infrastructure can be technically correct and still be financially irresponsible.
-
-A seemingly innocent Terraform change can introduce:
-
-💸 Oversized EC2 instances
-💾 Excessive EBS storage
-📈 Unexpected cost increases
-🏗️ Infrastructure beyond environment budgets
-⚠️ Resource-level spending violations
-
-Traditional CI/CD pipelines ask:
-
-"Does the infrastructure work?"
-
-This project adds another question:
-
-"Can we afford this infrastructure?"
-
+                         ┌─────────────────────┐
+                         │    Pull Request     │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │      Terraform      │
+                         │   Infrastructure    │
+                         │       Changes      │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │      Infracost      │
+                         │  Cost Estimation    │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                    ┌──────────────────────────────┐
+                    │       Python Analytics       │
+                    │                              │
+                    │  analyze_cost.py             │
+                    │  • Current cost              │
+                    │  • Previous cost              │
+                    │  • Cost delta                 │
+                    │  • Increase percentage        │
+                    │  • Resource analysis          │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │     YAML Policy Config       │
+                    │                              │
+                    │     policies.yml              │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │     Python + Jinja2           │
+                    │     Policy Generator          │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │        Generated Rego        │
+                    │      cost.rego                │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                         ┌─────────────────────┐
+                         │         OPA         │
+                         │  Policy Evaluation  │
+                         └──────────┬──────────┘
+                                    │
+                           ┌────────┴────────┐
+                           │                 │
+                           ▼                 ▼
+                        ✅ PASS            ❌ FAIL
+                           │                 │
+                           │          ┌──────┴────────┐
+                           │          │               │
+                           │          ▼               ▼
+                           │     PR Report      Slack Alert
+                           │
+                           ▼
+                  Continue Infrastructure Flow
 ✨ Key Features
-<table> <tr> <td width="50%">
-💰 Multi-Environment Budgets
+Feature	Technology	Purpose
+💰 Cost estimation	Infracost	Estimate infrastructure cost before deployment
+📜 Policy as Code	OPA + Rego	Enforce FinOps rules automatically
+⚙️ Policy generation	Python + Jinja2	Generate policies from YAML configuration
+🧠 Cost analytics	Python	Analyze and enrich cost data
+🏗️ Infrastructure	Terraform	Define realistic cloud infrastructure
+🔧 Configuration	Ansible	Deploy the FinOps dashboard
+🐳 Reproducibility	Docker	Run OPA consistently locally and in CI
+🧪 Policy testing	OPA	Validate FinOps rules
+🧪 Unit testing	Pytest	Validate Python logic
+🔄 CI/CD	GitHub Actions	Automate the entire governance pipeline
+💬 PR reporting	Infracost + GitHub	Surface cost information directly in PRs
+🚨 Notifications	Slack	Alert on policy violations
+📊 Dashboard	Ansible + Jinja2	Render FinOps cost information
+💵 FinOps Policy Engine
 
-Different environments can have different monthly limits.
+The policy engine supports multiple layers of cost governance.
 
-development: $100
-staging:     $250
-production:  $500
-</td> <td width="50%">
-📈 Cost Increase Guardrails
+1. Environment-Specific Budgets
 
-Detect infrastructure changes that increase monthly cost beyond an allowed percentage.
-
-max_percentage: 20
-</td> </tr> <tr> <td>
-🖥️ Resource-Level Policies
-
-Control individual resource categories.
-
-EC2 < $200/month
-EBS < $100/month
-</td> <td>
-🤖 Automated Enforcement
-
-Every pull request can automatically run:
-
-Terraform → Infracost → OPA
-
-No manual cost review required.
-
-</td> </tr> <tr> <td>
-🧪 Automated Testing
-
-The project tests:
-
-Rego policies
-Python generator
-Terraform
-Ansible
-</td> <td>
-🔔 Developer Feedback
-
-Policy failures are surfaced directly in the PR with:
-
-Cost estimate
-Failed policy
-Violation message
-Optional Slack alert
-</td> </tr> </table>
-🧠 Policy as Code
-
-FinOps rules are not hardcoded into the CI pipeline.
-
-They are defined through YAML:
+Each environment can have its own monthly budget.
 
 budgets:
   development:
@@ -150,9 +152,38 @@ budgets:
   production:
     monthly_limit: 500
 
+This means:
+
+Development → $100/month
+Staging     → $250/month
+Production  → $500/month
+
+A development infrastructure change estimated at $101/month fails even though production has a higher budget.
+
+2. Cost Increase Guardrail
+
+The engine compares the current monthly cost with the previous monthly cost.
+
+Previous monthly cost: $250.00
+Current monthly cost:  $281.12
+
+Monthly increase:
+($281.12 - $250.00) / $250.00 × 100
+
+= 12.45%
+
+With a configured maximum increase of 20%, this passes.
+
+A 30% increase fails.
+
+Configuration:
+
 cost_increase:
   enabled: true
   max_percentage: 20
+3. Resource-Level Cost Policies
+
+Individual resource categories can have their own limits.
 
 resources:
   ec2:
@@ -163,334 +194,363 @@ resources:
     enabled: true
     max_monthly_cost: 100
 
-A custom Python engine converts this configuration into executable Rego.
+This prevents a single expensive resource from being hidden inside an otherwise acceptable infrastructure budget.
 
-┌──────────────────┐
-│   policy.yml     │
-│                  │
-│ Budgets          │
-│ Resource Limits  │
-│ Cost Guardrails  │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│ Python Generator │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│ Generated Rego   │
-│                  │
-│ cost.rego        │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│ Open Policy      │
-│ Agent            │
-└──────────────────┘
+🧩 Configuration-Driven Policy Generation
 
-This makes policy management:
+The project separates policy configuration from policy implementation.
 
-Configurable → Version Controlled → Testable → Automated
+policy-generator/config/policies.yml
+                │
+                ▼
+       generate_policies.py
+                │
+                ▼
+          Jinja2 Template
+                │
+                ▼
+    policies/generated/cost.rego
+                │
+                ▼
+               OPA
 
-🛡️ Example FinOps Enforcement
-
-Suppose a Terraform change produces:
-
-Estimated Monthly Cost
-        ↓
-     $281.12
-
-But the development environment has:
-
-Monthly Budget
-        ↓
-     $100.00
-
-OPA evaluates the infrastructure and returns:
-
-❌ POLICY VIOLATION
-
-Monthly infrastructure cost for development
-must be less than $100.00
-
-Actual Cost: $281.12
-
-The GitHub Actions workflow then fails the pull request.
-
-Result
-Terraform      ✅
-Python Tests   ✅
-OPA Tests      ✅
-Ansible        ✅
-Infracost      ✅
-Cost Policy    ❌
-──────────────────
-CI Result       ❌ BLOCKED
-📊 Cost Increase Protection
-
-The engine can compare the current infrastructure cost against a previous baseline.
+This provides a cleaner workflow than manually editing large Rego files whenever a budget changes.
 
 Example:
 
-Previous Cost     $200/month
-Current Cost      $260/month
-────────────────────────────
-Increase          30%
-Allowed           20%
+development:
+  monthly_limit: 100
 
-Result            ❌ BLOCKED
+can generate a Rego rule equivalent to:
 
-This catches expensive infrastructure changes even when the absolute environment budget has not been exceeded.
+deny contains out if {
+    input.environment == "development"
+    actualCost := to_number(input.totalMonthlyCost)
+    actualCost >= 100
+}
 
-🏗️ Infrastructure Architecture
+The generated policy is deterministic and reproducible from the YAML configuration.
 
-The Terraform infrastructure represents a realistic cloud environment rather than a single demo resource.
-
-                         ☁️ Cloud Infrastructure
-                                  │
-                                  ▼
-                              ┌───────┐
-                              │  VPC  │
-                              └───┬───┘
-                                  │
-                         ┌────────┴────────┐
-                         │                 │
-                         ▼                 ▼
-                  Public Subnet      Security Group
-                         │                 │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                             ┌─────────┐
-                             │   EC2   │
-                             └────┬────┘
-                                  │
-                                  ▼
-                             ┌─────────┐
-                             │   EBS   │
-                             └─────────┘
-
-Terraform uses a reusable module architecture:
-
-terraform/
-│
-├── main.tf
-├── providers.tf
-├── variables.tf
-├── outputs.tf
-│
-├── environments/
-│   └── development.tfvars
-│
-└── modules/
-    └── finops_stack/
-        ├── compute.tf
-        ├── network.tf
-        ├── security.tf
-        ├── variables.tf
-        └── outputs.tf
-⚙️ CI/CD Pipeline
-
-The entire workflow is automated through GitHub Actions.
-
-                 Pull Request
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Terraform       │
-              │ fmt + validate  │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Python Tests    │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Generate Rego   │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ OPA Policy Test │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Ansible Check   │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │    Infracost    │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ Cost Analytics  │
-              └────────┬────────┘
-                       │
-                       ▼
-              ┌─────────────────┐
-              │ FinOps Policy   │
-              │   Enforcement   │
-              └────────┬────────┘
-                       │
-              ┌────────┴────────┐
-              ▼                 ▼
-           ✅ PASS             ❌ FAIL
-              │                 │
-              ▼                 ├── 💬 PR Report
-        Merge Allowed            ├── 🔔 Slack
-                                  └── 🚫 CI Failed
-🧪 Testing
-
-The project has automated tests across multiple layers.
-
-Layer	Validation
-🏗️ Terraform	fmt + validate
-🐍 Python	pytest
-🧠 Rego	OPA test suite
-⚙️ Ansible	Syntax validation
-💵 Infracost	Cost estimation
-🚦 Policy Engine	Automated enforcement
-Current Policy Test Suite
-✅ Development under budget
-❌ Development at budget
-❌ Development over budget
-
-✅ Allowed cost increase
-❌ Excessive cost increase
-
-❌ Staging budget violation
-❌ Production budget violation
-
-❌ EC2 resource violation
-❌ EBS resource violation
-Test Result
-┌──────────────────────────┐
-│   OPA POLICY TESTS       │
-│                          │
-│       10 / 10            │
-│        PASS ✅            │
-└──────────────────────────┘
-
-Python generator tests:
-
-2 / 2 PASS ✅
 🐍 Python Automation
 
-The Python layer provides meaningful application logic rather than acting as a simple script wrapper.
+The custom Python layer contains two meaningful components.
 
 Policy Generator
-YAML Configuration
-        ↓
-Configuration Parsing
-        ↓
-Policy Generation
-        ↓
-Rego Output
+
+generate_policies.py:
+
+Reads YAML configuration
+Validates configured policy structures through generation logic
+Loads Jinja2 templates
+Generates Rego
+Creates the output directory when required
+Produces a deterministic policy file
+
+Usage:
+
+python policy-generator/src/generate_policies.py \
+  --config policy-generator/config/policies.yml \
+  --output policies/generated/cost.rego
 Cost Analytics
 
-The analytics component consumes Infracost JSON output and generates an environment-aware Markdown cost report.
+analyze_cost.py processes the Infracost JSON output.
 
-This separates:
+It calculates and exposes:
 
-Cost Estimation
+Environment
+Current monthly cost
+Previous monthly cost
+Monthly cost delta
+Percentage increase
+Resource count
+Top resources
 
-from:
+Example:
 
-Policy Enforcement
+FinOps Cost Analysis
 
-making the architecture easier to extend.
+Environment: development
+Current monthly cost: $281.12
+Previous monthly cost: $250.00
+Monthly delta: $31.12
+Cost increase: 12.45%
+Resources analyzed: 2
+🛡️ OPA Policy Testing
 
-🐳 Dockerized OPA
+The project contains an automated OPA test suite covering both valid and invalid infrastructure scenarios.
 
-The project includes a dedicated Docker environment for OPA.
+Current result:
 
-docker/
-└── Dockerfile.opa
+PASS: 10/10
 
-docker-compose.yml
+Test coverage includes:
+
+Development $80       → PASS
+Development $99       → PASS
+Development $100      → FAIL
+Development $281      → FAIL
+
+Cost increase 12.5%  → PASS
+Cost increase 30%    → FAIL
+
+Staging $250          → FAIL
+Production $500       → FAIL
+
+EC2 $250              → FAIL
+EBS $120              → FAIL
+
+OPA runs inside Docker to keep policy execution reproducible.
 
 Run locally:
 
 docker compose build
 docker compose run --rm opa
 
-Expected result:
+Expected:
 
 PASS: 10/10
+🧪 Python Test Suite
 
-This removes dependency on a machine-specific OPA installation and makes local policy execution reproducible.
+The Python automation layer is covered by Pytest.
 
-☁️ Local AWS Development
+The tests validate:
 
-The project uses LocalStack for local AWS-compatible infrastructure testing.
+Environment-specific policy generation
+Cost increase guardrails
+Resource-level policies
+Generated policy structure
+Cost analytics
+Environment enrichment
+Cost calculations
+Resource analysis
 
-This allows Terraform workflows to be exercised without requiring a real AWS deployment.
+Run:
 
-Developer Machine
-       │
-       ▼
-   Terraform
-       │
-       ▼
-   LocalStack
-       │
-       ▼
-AWS-Compatible APIs
+pytest -q policy-generator/tests
 
-This keeps development:
+Expected:
 
-Local → Reproducible → Low Cost
+10 passed
+🏗️ Terraform Infrastructure
 
-⚙️ Ansible Automation
+The Terraform configuration models a realistic infrastructure stack rather than a single placeholder resource.
 
-Ansible provides the configuration-management layer.
-
-ansible/
+VPC
 │
-├── inventory.ini
-├── site.yml
+├── Subnet
 │
-└── roles/
-    └── webserver/
-        ├── defaults/
-        │   └── main.yml
-        ├── handlers/
-        │   └── main.yml
-        ├── tasks/
-        │   └── main.yml
-        └── templates/
-            └── index.html.j2
+├── Security Group
+│
+├── EC2 Instance
+│
+└── EBS Volume
 
-The role handles:
+The configuration uses reusable modules and environment-specific variables.
 
-📦 Nginx installation
-⚙️ Service configuration
-🌍 Environment-aware deployment
-🔄 Service restart handlers
-🚀 Service enablement
-🔔 Slack Notifications
+terraform/
+│
+├── environments/
+│   └── development.tfvars
+│
+├── modules/
+│   └── finops_stack/
+│       ├── compute.tf
+│       ├── network.tf
+│       ├── security.tf
+│       ├── variables.tf
+│       └── outputs.tf
+│
+├── main.tf
+├── providers.tf
+├── variables.tf
+└── outputs.tf
 
-FinOps policy failures can optionally trigger Slack notifications.
+Terraform validation:
 
-Configure the GitHub repository secret:
+terraform -chdir=terraform init -backend=false
+terraform -chdir=terraform fmt -check -recursive
+terraform -chdir=terraform validate
 
-SLACK_WEBHOOK_URL
+Expected:
 
-The pipeline remains fully functional without Slack configured.
+Success! The configuration is valid.
 
-Policy Failure
+The project uses LocalStack-compatible provider endpoints for local development and validation, avoiding the need for a real AWS deployment during testing.
+
+🔧 Ansible FinOps Dashboard
+
+Ansible is not included merely as a generic configuration-management example.
+
+It is connected to the FinOps pipeline.
+
+The flow is:
+
+Infracost JSON
       │
-      ├───────────────► GitHub PR Comment
+      ▼
+Python Cost Analytics
       │
-      └───────────────► Slack Alert 🔔
+      ▼
+FinOps Dashboard Variables
+      │
+      ▼
+Ansible Role
+      │
+      ▼
+Jinja2 Dashboard Template
+      │
+      ▼
+FinOps Dashboard
+
+The Ansible role can:
+
+Install Nginx
+Create the dashboard directory
+Render the FinOps dashboard
+Configure an Nginx virtual host
+Enable the dashboard site
+Disable the default Nginx site
+Restart Nginx when configuration changes
+Ensure Nginx is enabled and running
+
+The role also supports a render-only CI mode, allowing the dashboard template to be validated without privileged system configuration.
+
+Validate:
+
+ansible-playbook \
+  -i ansible/inventory.ini \
+  --syntax-check \
+  ansible/site.yml
+🐳 Docker
+
+OPA execution is containerized using Docker.
+
+docker/
+└── Dockerfile.opa
+
+docker-compose.yml
+
+The container consumes the canonical policy locations:
+
+policies/generated/cost.rego
+policies/cost_test.rego
+
+Run:
+
+docker compose build
+docker compose run --rm opa
+
+This removes the dependency on a platform-specific opa.exe binary.
+
+🔄 GitHub Actions CI/CD
+
+The entire governance process is automated through GitHub Actions.
+
+Pull Request
+     │
+     ▼
+Terraform fmt
+     │
+     ▼
+Terraform init
+     │
+     ▼
+Terraform validate
+     │
+     ▼
+Python dependencies
+     │
+     ▼
+Python tests
+     │
+     ▼
+Generate Rego
+     │
+     ▼
+Dockerized OPA tests
+     │
+     ▼
+Ansible syntax validation
+     │
+     ▼
+Infracost estimation
+     │
+     ▼
+Python cost analytics
+     │
+     ▼
+FinOps dashboard rendering
+     │
+     ▼
+FinOps policy enforcement
+     │
+     ├───────────────┐
+     ▼               ▼
+   PASS             FAIL
+     │               │
+     ▼               ├── GitHub PR report
+ Continue            ├── Slack alert
+                     └── Workflow failure
+
+The workflow runs when relevant infrastructure, policy, automation, Docker, or workflow files change.
+
+🚨 Example Policy Violation
+
+Consider an infrastructure change that produces:
+
+Environment: development
+
+Configured budget:
+$100.00/month
+
+Estimated cost:
+$281.12/month
+
+The policy engine produces a violation similar to:
+
+Monthly infrastructure cost for development
+must be less than $100.00
+(actual cost is $281.12)
+
+The GitHub Actions job then fails.
+
+This creates a cost gate directly inside the infrastructure review process.
+
+📊 Example Cost Analysis
+
+Example input:
+
+{
+  "totalMonthlyCost": "281.12",
+  "pastTotalMonthlyCost": "250.00",
+  "projects": [
+    {
+      "breakdown": {
+        "resources": [
+          {
+            "name": "aws_instance.web",
+            "monthlyCost": "220.00"
+          },
+          {
+            "name": "aws_ebs_volume.data",
+            "monthlyCost": "61.12"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+The analytics engine derives:
+
+Current cost       = $281.12
+Previous cost      = $250.00
+Monthly delta      = $31.12
+Increase           = 12.45%
+Resources analyzed = 2
+
+The enriched data is then consumed by downstream FinOps automation.
+
 📁 Project Structure
 finops-policy-as-code-engine/
 │
@@ -503,178 +563,233 @@ finops-policy-as-code-engine/
 │   ├── site.yml
 │   └── roles/
 │       └── webserver/
+│           ├── defaults/
+│           │   └── main.yml
+│           ├── handlers/
+│           │   └── main.yml
+│           ├── tasks/
+│           │   └── main.yml
+│           └── templates/
+│               ├── dashboard.html.j2
+│               └── finops-dashboard.conf.j2
 │
 ├── docker/
 │   └── Dockerfile.opa
 │
+├── policies/
+│   ├── cost.rego
+│   ├── cost_test.rego
+│   └── generated/
+│       └── cost.rego
+│
 ├── policy-generator/
+│   ├── config/
+│   │   └── policies.yml
 │   ├── src/
 │   │   ├── analyze_cost.py
 │   │   └── generate_policies.py
+│   ├── templates/
+│   │   └── cost.rego.j2
 │   ├── tests/
 │   │   └── test_generator.py
 │   └── requirements.txt
 │
-├── policies/
-│   ├── generated/
-│   │   └── cost.rego
-│   └── cost_test.rego
-│
 ├── terraform/
-│   ├── main.tf
-│   ├── providers.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   │
 │   ├── environments/
 │   │   └── development.tfvars
-│   │
-│   └── modules/
-│       └── finops_stack/
-│           ├── compute.tf
-│           ├── network.tf
-│           ├── security.tf
-│           ├── variables.tf
-│           └── outputs.tf
+│   ├── modules/
+│   │   └── finops_stack/
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── providers.tf
+│   └── variables.tf
 │
 ├── docker-compose.yml
+├── LICENSE
 ├── .gitignore
 └── README.md
-🧰 Tech Stack
-<div align="center">
-Technology	Role
-🟣 Terraform	Infrastructure as Code
-🟠 Open Policy Agent	Policy Enforcement
-🔵 Rego	Policy Language
-🐍 Python	Automation & Analytics
-💵 Infracost	Cloud Cost Estimation
-🔴 Ansible	Configuration Management
-🐳 Docker	Reproducible Execution
-🟪 LocalStack	Local AWS Environment
-⚫ GitHub Actions	CI/CD Automation
-🔔 Slack	Notifications
-🧪 Pytest	Python Testing
-</div>
-🎓 Engineering Concepts Demonstrated
+⚙️ Local Setup
+1. Clone
+git clone https://github.com/AryanThakur30/finops-policy-as-code-engine.git
 
-This project combines multiple areas of modern DevOps and cloud engineering:
+cd finops-policy-as-code-engine
+2. Create Python Environment
+python3 -m venv policy-generator/.venv
 
-                 ┌─────────────────────┐
-                 │       FinOps        │
-                 └──────────┬──────────┘
-                            │
-       ┌────────────────────┼────────────────────┐
-       ▼                    ▼                    ▼
- Infrastructure         Policy as Code        Automation
-       │                    │                    │
-       ▼                    ▼                    ▼
-   Terraform               OPA                 Python
-       │                    │                    │
-       └────────────────────┼────────────────────┘
-                            │
-                            ▼
-                         CI / CD
-                            │
-                 ┌──────────┴──────────┐
-                 ▼                     ▼
-              GitHub                 Slack
-📈 What This Project Solves
-Traditional Problem	This Engine
-💸 Discover cost after deployment	💰 Evaluate before deployment
-🧑‍💻 Manual cost review	🤖 Automated policy enforcement
-📋 Static cost documentation	🧠 Executable policies
-🔒 Hardcoded thresholds	⚙️ YAML-driven configuration
-🧪 Untested policies	✅ Automated OPA tests
-🖥️ Machine-specific tooling	🐳 Dockerized OPA
-☁️ Real AWS required for experiments	🧪 LocalStack
-📢 Cost issue discovered later	💬 PR feedback immediately
-🔥 Example End-to-End Scenario
+source policy-generator/.venv/bin/activate
 
-A developer increases infrastructure capacity.
+pip install -r policy-generator/requirements.txt
+3. Generate the Policy
+python policy-generator/src/generate_policies.py \
+  --config policy-generator/config/policies.yml \
+  --output policies/generated/cost.rego
+4. Run Python Tests
+pytest -q policy-generator/tests
+5. Run OPA Tests
+docker compose build
+docker compose run --rm opa
+6. Validate Terraform
+terraform -chdir=terraform init -backend=false
+terraform -chdir=terraform fmt -check -recursive
+terraform -chdir=terraform validate
+7. Validate Ansible
+ansible-playbook \
+  -i ansible/inventory.ini \
+  --syntax-check \
+  ansible/site.yml
+🔐 GitHub Secrets
 
-Step 1
+The CI workflow supports the following repository secrets:
 
-Terraform describes the infrastructure.
+INFRACOST_API_KEY
+SLACK_WEBHOOK_URL
 
-Terraform
-    ↓
-EC2 + EBS + Network
-Step 2
+SLACK_WEBHOOK_URL is optional.
 
-Infracost estimates:
+If it is not configured, the workflow skips the Slack notification safely.
 
-$281.12/month
-Step 3
+Never commit:
 
-The development budget is:
+API keys
+Passwords
+Private keys
+Cloud credentials
+Slack webhook URLs
 
-$100/month
-Step 4
+to the repository.
 
-OPA evaluates the generated policy.
+🧪 Validation Status
+Component	Result
+🐍 Python tests	✅ 10/10
+🛡️ OPA tests	✅ 10/10
+🏗️ Terraform validation	✅ Valid
+🔧 Ansible syntax	✅ Valid
+🧩 Jinja2 policy generation	✅ Integrated
+🐳 Dockerized OPA	✅ Working
+💰 Infracost	✅ Integrated
+📊 Python cost analytics	✅ Working
+📊 FinOps dashboard rendering	✅ Integrated
+🔄 GitHub Actions	✅ Automated
+💬 PR cost reporting	✅ Integrated
+🚨 Slack notification	✅ Supported
+🎯 Engineering Principles
+Shift-Left FinOps
 
-$281.12 > $100
-Step 5
+Cost governance happens during infrastructure review rather than after deployment.
 
-Policy fails.
+Policy as Code
 
-❌ FinOps Policy Violation
-Step 6
+FinOps rules are version-controlled, testable, reviewable, and executable.
 
-GitHub Actions reports the result.
+Configuration Driven
 
-PR Comment
-    +
-Slack Alert
-    +
-CI Failure
-Final Result
-🚫 Expensive infrastructure
-   does not silently reach production.
-🏆 Project Highlights
-<div align="center">
-💰 Cost Governance
-🧠 Policy as Code
-🤖 Python Automation
-🏗️ Terraform Modules
-🧪 Automated Testing
-🐳 Docker Reproducibility
-⚙️ Ansible Configuration
-🔄 GitHub Actions CI/CD
-🔔 Slack Integration
-☁️ Local AWS Testing
-</div>
-🔮 Future Extensions
+Budgets and resource limits are defined through YAML rather than being scattered across the codebase.
 
-The architecture can be extended toward:
+Reproducible Execution
 
-🌎 Multi-cloud cost governance
-📊 Historical cost trend analysis
-🚨 Cost anomaly detection
-👥 Team-level budgets
-☸️ Kubernetes cost policies
-🤖 Automated optimization recommendations
-📈 FinOps dashboards
-🔐 Policy approval workflows
-🏢 Organization-level cloud governance
-💡 Core Philosophy
-Cloud infrastructure should be secure, reliable, scalable, and financially responsible.
+OPA runs through Docker so the policy runtime is consistent across development and CI.
 
-Most infrastructure pipelines already enforce:
+Modular Infrastructure
 
-Security
-Reliability
-Testing
-Deployment Quality
+Terraform uses reusable modules and environment-specific configuration.
 
-This project adds:
+Automated Enforcement
 
-💰 Financial Responsibility
+A pull request can automatically trigger:
 
-as an automated engineering constraint.
+Cost estimation
+      ↓
+Analytics
+      ↓
+Policy generation
+      ↓
+Policy tests
+      ↓
+Policy enforcement
+      ↓
+PR feedback
+      ↓
+Notification
+📈 Why FinOps Policy as Code?
 
-<div align="center">
-🚦 Build Infrastructure.
-💰 Measure Its Cost.
-🧠 Enforce Policy.
-🚀 Deploy Responsibly.
+Traditional cloud cost monitoring primarily answers:
+
+"How much did we spend?"
+
+This project focuses on a different question:
+
+"Should this infrastructure change be allowed?"
+
+That changes cost governance from a reporting problem into an engineering control.
+
+Instead of waiting for the monthly cloud bill, teams can identify problematic infrastructure changes before they are deployed.
+
+🚀 Future Roadmap
+
+The architecture can be extended with:
+
+📈 Cost anomaly detection
+🏷️ Mandatory cost-center and ownership tags
+☁️ Multi-cloud policy support
+📅 Budget forecasting
+🔍 Automated resource optimization recommendations
+🤖 Automated remediation
+📊 Historical cost trends
+🔐 Approval workflows for policy exceptions
+🧠 AI-assisted FinOps recommendations
+📉 Cost optimization suggestions based on utilization
+🛠️ Technology Stack
+Infrastructure
+└── Terraform
+
+Cost Intelligence
+└── Infracost
+└── Python
+
+Policy Engine
+└── Open Policy Agent
+└── Rego
+└── Jinja2
+
+Configuration Management
+└── Ansible
+└── Nginx
+
+Reproducibility
+└── Docker
+└── Docker Compose
+
+CI/CD
+└── GitHub Actions
+
+Notifications
+└── Slack
+📜 License
+
+This project is licensed under the MIT License.
+
+See the LICENSE file for details.
+
+👨‍💻 Author
+Aryan Thakur
+
+GitHub:
+
+https://github.com/AryanThakur30
+
+Project:
+
+https://github.com/AryanThakur30/finops-policy-as-code-engine
+
+💰 Make cloud cost a constraint before it becomes a bill.</strong> </p> <p align="center"> Terraform • Infracost • Python • Jinja2 • Rego • OPA • Ansible • Docker • GitHub Actions • Slack </p> EOF
+
+echo "===== README READY ====="
+wc -l README.md
+
+echo
+echo "===== README CHECK ====="
+grep -n "FinOps Policy as Code Engine|Architecture|Policy Engine|Ansible FinOps Dashboard|GitHub Actions|Validation Status|MIT License" README.md
+
+echo
+echo "===== GIT STATUS ====="
+git status --short
