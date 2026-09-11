@@ -5,6 +5,7 @@ on:
     paths:
       - "terraform/**"
       - "policies/**"
+      - "ansible/**"
       - ".github/workflows/infracost.yml"
 
 permissions:
@@ -19,6 +20,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          ansible --version
+
+      - name: Validate Ansible playbook
+        run: |
+          ansible-playbook \
+            -i ansible/inventory.ini \
+            --syntax-check \
+            ansible/site.yml
 
       - name: Install Infracost
         run: |
