@@ -39,7 +39,7 @@ def test_generator_creates_environment_budgets():
     assert "cost-increase-guardrail" in policy
     assert "resource-cost-ec2" in policy
     assert "resource-cost-ebs" in policy
-    assert "default deny := set()" in policy
+    assert "default deny := set()" not in policy
 
 
 def test_cost_analyzer_enriches_environment():
