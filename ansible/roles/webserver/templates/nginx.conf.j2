@@ -1,0 +1,9 @@
+server {
+    listen {{ nginx_port }};
+    server_name _;
+
+    location / {
+        default_type text/plain;
+        return 200 "FinOps Policy as Code Engine - {{ deployment_environment }} environment\n";
+    }
+}

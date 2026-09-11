@@ -5,6 +5,10 @@ on:
     paths:
       - "terraform/**"
       - "policies/**"
+      - "policy-generator/**"
+      - "ansible/**"
+      - "docker/**"
+      - "docker-compose.yml"
       - ".github/workflows/infracost.yml"
 
 permissions:
@@ -16,9 +20,80 @@ jobs:
     name: FinOps Cost Policy Check
     runs-on: ubuntu-latest
 
+    env:
+      FINOPS_ENVIRONMENT: development
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # ------------------------------------------------------
+      # Terraform
+      # ------------------------------------------------------
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform format check
+        run: terraform -chdir=terraform fmt -check -recursive
+
+      - name: Terraform initialize
+        run: terraform -chdir=terraform init -backend=false
+
+      - name: Terraform validate
+        run: terraform -chdir=terraform validate
+
+      # ------------------------------------------------------
+      # Python policy generator + analytics
+      # ------------------------------------------------------
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r policy-generator/requirements.txt
+
+      - name: Run Python tests
+        run: pytest -q policy-generator/tests
+
+      - name: Generate Rego policy
+        run: |
+          python policy-generator/src/generate_policies.py \
+            --config policy-generator/config/policies.yml \
+            --output policies/generated/cost.rego
+
+      # ------------------------------------------------------
+      # Dockerized OPA tests
+      # ------------------------------------------------------
+
+      - name: Build OPA test image
+        run: docker compose build --no-cache
+
+      - name: Run OPA policy tests
+        run: docker compose run --rm opa
+
+      # ------------------------------------------------------
+      # Ansible
+      # ------------------------------------------------------
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          ansible --version
+
+      - name: Validate Ansible playbook
+        run: |
+          ansible-playbook \
+            -i ansible/inventory.ini \
+            --syntax-check \
+            ansible/site.yml
+
+      # ------------------------------------------------------
+      # Infracost
+      # ------------------------------------------------------
 
       - name: Install Infracost
         run: |
@@ -32,17 +107,87 @@ jobs:
           infracost breakdown \
             --path=terraform \
             --terraform-var=ami_id=ami-0a1c1331a9f44a10 \
+            --terraform-var=environment=development \
             --format=json \
             --out-file=/tmp/infracost.json
 
-      - name: Check FinOps policy
+      # ------------------------------------------------------
+      # Python cost analytics
+      # ------------------------------------------------------
+
+      - name: Analyze infrastructure cost
+        run: |
+          python policy-generator/src/analyze_cost.py \
+            --input /tmp/infracost.json \
+            --output /tmp/infracost-enriched.json \
+            --report /tmp/finops-cost-report.md \
+            --environment "$FINOPS_ENVIRONMENT"
+
+          cat /tmp/finops-cost-report.md
+
+      # ------------------------------------------------------
+      # FinOps enforcement
+      # ------------------------------------------------------
+
+      - name: Enforce FinOps policy
+        id: finops_enforcement
+        continue-on-error: true
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
         run: |
           infracost comment github \
-            --path=/tmp/infracost.json \
+            --path=/tmp/infracost-enriched.json \
             --repo="${{ github.repository }}" \
             --pull-request="${{ github.event.pull_request.number }}" \
             --github-token="${{ github.token }}" \
             --behavior=update \
-            --policy-path=policies/cost.rego
+            --policy-path=policies/generated/cost.rego
+
+      # ------------------------------------------------------
+      # Slack notification
+      # ------------------------------------------------------
+
+      - name: Send Slack policy violation alert
+        if: steps.finops_enforcement.outcome == 'failure'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL is not configured. Skipping Slack notification."
+            exit 0
+          fi
+
+          payload=$(python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = Path("/tmp/finops-cost-report.md").read_text(
+              encoding="utf-8"
+          )
+
+          print(json.dumps({
+              "text": (
+                  "🚨 FinOps Policy Violation\n\n"
+                  f"Repository: ${{ github.repository }}\n"
+                  f"Pull Request: #${{ github.event.pull_request.number }}\n\n"
+                  f"{report}"
+              )
+          }))
+          PY
+          )
+
+          curl -fsS \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$payload" \
+            "$SLACK_WEBHOOK_URL"
+
+      # ------------------------------------------------------
+      # Final enforcement
+      # ------------------------------------------------------
+
+      - name: Fail workflow on FinOps violation
+        if: steps.finops_enforcement.outcome == 'failure'
+        run: |
+          echo "FinOps policy violation detected."
+          exit 1
