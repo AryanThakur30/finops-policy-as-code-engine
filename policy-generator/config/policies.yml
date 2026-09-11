@@ -1,0 +1,20 @@
+budgets:
+  development:
+    monthly_limit: 100
+  staging:
+    monthly_limit: 250
+  production:
+    monthly_limit: 500
+
+cost_increase:
+  enabled: true
+  max_percentage: 20
+
+resources:
+  ec2:
+    enabled: true
+    max_monthly_cost: 200
+
+  ebs:
+    enabled: true
+    max_monthly_cost: 100

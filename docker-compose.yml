@@ -1,0 +1,7 @@
+services:
+  opa:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.opa
+    container_name: finops-opa
+    command: ["test", "/project/policies", "-v"]
