@@ -62,9 +62,7 @@ def write_report(report_path, summary):
     ]
 
     for resource in summary["top_resources"]:
-        lines.append(
-            f"| `{resource['name']}` | `${resource['monthly_cost']:.2f}` |"
-        )
+        lines.append(f"| `{resource['name']}` | `${resource['monthly_cost']:.2f}` |")
 
     Path(report_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -80,9 +78,7 @@ def main():
 
     args = parser.parse_args()
 
-    input_data = json.loads(
-        Path(args.input).read_text(encoding="utf-8")
-    )
+    input_data = json.loads(Path(args.input).read_text(encoding="utf-8"))
 
     enriched, summary = analyze(input_data, args.environment)
 

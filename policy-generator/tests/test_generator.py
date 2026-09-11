@@ -83,9 +83,7 @@ def test_missing_required_config_key():
 def test_missing_budget_limit():
     config = {
         **VALID_CONFIG,
-        "budgets": {
-            "development": {}
-        },
+        "budgets": {"development": {}},
     }
 
     with pytest.raises(ValueError, match="monthly_limit"):
@@ -95,11 +93,7 @@ def test_missing_budget_limit():
 def test_invalid_budget_value():
     config = {
         **VALID_CONFIG,
-        "budgets": {
-            "development": {
-                "monthly_limit": "not-a-number"
-            }
-        },
+        "budgets": {"development": {"monthly_limit": "not-a-number"}},
     }
 
     with pytest.raises(ValueError, match="must be numeric"):

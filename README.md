@@ -1,3 +1,5 @@
+[![FinOps Cost Policy](https://github.com/AryanThakur30/finops-policy-as-code-engine/actions/workflows/infracost.yml/badge.svg)](https://github.com/AryanThakur30/finops-policy-as-code-engine/actions/workflows/infracost.yml)
+[![Security Checks](https://github.com/AryanThakur30/finops-policy-as-code-engine/actions/workflows/security.yml/badge.svg)](https://github.com/AryanThakur30/finops-policy-as-code-engine/actions/workflows/security.yml)
 <div align="center">
 
 # 💰 FinOps Policy as Code Engine

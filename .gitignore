@@ -20,3 +20,7 @@ opa.exe
 __pycache__/
 .pytest_cache/
 *.pyc
+
+.pre-commit-cache/
+.ruff_cache/
+.yamllint

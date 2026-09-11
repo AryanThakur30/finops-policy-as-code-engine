@@ -33,16 +33,12 @@ def validate_config(config: dict) -> None:
             )
 
         if "monthly_limit" not in values:
-            raise ValueError(
-                f"Budget '{environment}' is missing 'monthly_limit'."
-            )
+            raise ValueError(f"Budget '{environment}' is missing 'monthly_limit'.")
 
         limit = values["monthly_limit"]
 
         if isinstance(limit, bool):
-            raise ValueError(
-                f"Budget '{environment}' monthly_limit must be numeric."
-            )
+            raise ValueError(f"Budget '{environment}' monthly_limit must be numeric.")
 
         try:
             limit = float(limit)
@@ -76,21 +72,15 @@ def validate_config(config: dict) -> None:
         percentage = cost_increase["max_percentage"]
 
         if isinstance(percentage, bool):
-            raise ValueError(
-                "'cost_increase.max_percentage' must be numeric."
-            )
+            raise ValueError("'cost_increase.max_percentage' must be numeric.")
 
         try:
             percentage = float(percentage)
         except (TypeError, ValueError) as exc:
-            raise ValueError(
-                "'cost_increase.max_percentage' must be numeric."
-            ) from exc
+            raise ValueError("'cost_increase.max_percentage' must be numeric.") from exc
 
         if percentage < 0:
-            raise ValueError(
-                "'cost_increase.max_percentage' cannot be negative."
-            )
+            raise ValueError("'cost_increase.max_percentage' cannot be negative.")
 
     resources = config["resources"]
 
@@ -104,9 +94,7 @@ def validate_config(config: dict) -> None:
             )
 
         if "enabled" not in values:
-            raise ValueError(
-                f"Resource '{resource_type}' is missing 'enabled'."
-            )
+            raise ValueError(f"Resource '{resource_type}' is missing 'enabled'.")
 
         if not isinstance(values["enabled"], bool):
             raise ValueError(

@@ -80,4 +80,3 @@ deny contains out if {
         "failed": true,
     }
 }
-
